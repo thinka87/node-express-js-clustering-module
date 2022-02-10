@@ -8,4 +8,4 @@ scenarios:
   - name: "Retrieve data"
     flow:
       - get:
-          url: "/?max=100000"
+          url: "/sendNotifications?url=http://localhost:3001/receiver&message=1"
