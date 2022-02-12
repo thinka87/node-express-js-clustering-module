@@ -1,0 +1,55 @@
+#!/bin/bash
+
+interval=0 #default interval
+http_client_url='http://172.23.32.1:3030/sendNotifications'  #set http clinet get end point for sending notifications
+filename=$1 #get filename that includes message list
+
+#get flag options
+while getopts u:i: flag
+do
+    case "${flag}" in
+        u) url=${OPTARG};;
+        i) interval=${OPTARG};;
+
+    esac
+done
+
+#check url value is empty
+if [ -z "$url" ]
+then 
+    echo 'url cannot be blank please try again!' 
+    exit 0 
+fi
+
+#check is a valid url
+regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+
+if ! [[ $url =~ $regex ]]
+then 
+    echo "invalid url"
+	exit 0
+fi
+
+#check interval value is integer
+if ! [[ "$interval" =~ ^[0-9]+$ ]]
+    then
+	   echo "intverval should be positive integer value"
+	   exit 0
+fi
+
+#handle SIGINT
+trap "echo The program terminate process is started....." SIGTERM SIGINT
+
+#looping message list and call to http clinet
+while read msg; do
+
+#send curl request and get response from http client
+response=$(curl -s -G --data-urlencode "url=${url}" --data-urlencode "message=${msg}" $http_client_url -H "Accept: application/json")
+result="message: $msg -> http client response: $response"
+#print response for each message
+echo ${result}
+#sleep if before next call with defined interval value
+sleep $interval
+done
+
+
