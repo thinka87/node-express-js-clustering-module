@@ -21,7 +21,7 @@ else {
         query('message').exists().withMessage('message is required').isLength({ min: 1 }).withMessage('message minimum lenght is 1'), //validate message
         caller)
 
-    app.listen(port, '172.23.32.1')
+    app.listen(port)
     console.log('app is running on port', port)
     
 }
