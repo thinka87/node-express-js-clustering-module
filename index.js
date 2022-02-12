@@ -1,8 +1,8 @@
 const cluster = require('cluster') //load cluster module
 const os = require('os')  //load os module
 const express = require('express')  //load express
-const { query, validationResult } = require('express-validator') //load input validation library
-const httpclient = require('./httpclient') //export httmp clinet module
+const { query } = require('express-validator') //load input validation library
+const caller = require('./caller') //export http clinet module
 const port = process.env.PORT || 3030  //set listning port
 
 if (cluster.isMaster) {
@@ -16,30 +16,14 @@ else {
     const app = express()
 
     //define GET end point to receive request from executor
-    app.get('/sendNotifications', 
-    query('url').exists().withMessage('url is required').isURL({ protocols: ['https','http'] , require_tld: false, require_protocol: true }).withMessage('url is invalid'),  //validate URL
-    query('message').exists().withMessage('message is required').isLength({ min: 1 }).withMessage('message minimum lenght is 1'), //validate message
-    
-    (req, res) => {
+    app.get('/sendNotifications',
+        query('url').exists().withMessage('url is required').isURL({ protocols: ['https', 'http'], require_tld: false, require_protocol: true }).withMessage('url is invalid'),  //validate URL
+        query('message').exists().withMessage('message is required').isLength({ min: 1 }).withMessage('message minimum lenght is 1'), //validate message
+        caller)
 
-        //check has validation erros
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({"status_code":400 , "message": errors.array()});
-        }
-
-        //if validations OK
-        const message= req.query.message
-        const url =req.query.url
-        httpclient(url ,message ,function (response) {
-            res.status(response.status_code)
-            return res.json(response);
-        })
-        
-    })
- 
-    app.listen(port,'172.23.32.1')
+    app.listen(port, '172.23.32.1')
     console.log('app is running on port', port)
+    
 }
 
 cluster.on('exit', (worker) => {
