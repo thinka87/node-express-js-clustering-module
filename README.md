@@ -30,5 +30,5 @@ Steps
 
 ## Notes
 ***
-* To scale the http client api performance i haved node js cluster module that runnning seprate process in each CPUs
+* To scale the http client api performance i have used node js cluster module that runnning seprate process in each CPUs
 
