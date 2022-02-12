@@ -17,9 +17,9 @@ module.exports = (url ,message,cb) => {
     }).catch(function (error) {  //catch errors
       
       if(typeof error.response !== 'undefined'){
-        return cb({"status_code":error.response.status , "message": "Error ocuured calling to URL: "+url})
+        return cb({"status_code":error.response.status , "message": "Error occurred calling to URL: "+url})
       }else {
-        return cb({"status_code":403 , "message": "Error ocuured connecting to URL: "+url})
+        return cb({"status_code":403 , "message": "Error occurred connecting to URL: "+url})
       }   
       
   });
