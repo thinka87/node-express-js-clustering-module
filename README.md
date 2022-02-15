@@ -1,4 +1,4 @@
-# REFURBED backend interview by Thilina
+# node-express-js-clustering-module examples
 
 ## Technologies
 ***
@@ -27,8 +27,3 @@ Steps
 ## How to run test cases
 ***
 * integration test -> run 'npm test' in terminal
-
-## Notes
-***
-* To scale the http client api performance, i have used node js cluster module that runnning seprate process in each CPUs
-
